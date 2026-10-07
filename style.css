@@ -1,0 +1,183 @@
+/* Concept : un dossier technique d'administrateur systèmes, aux couleurs d'Ubuntu (aubergine et orange). Une colonne lisible,
+   quatre travaux dans l'ordre où ils s'enchaînent, les vraies commandes en bloc sombre. */
+:root {
+  --bg: #FAF6F3;
+  --surface: #FFFFFF;
+  --ink: #2C001E;
+  --muted: #6B5A63;
+  --line: #E6DCD8;
+  --accent: #D2491A;
+  --accent-soft: #FBE6DC;
+  --code-bg: #2C001E;
+  --code-fg: #F5ECF0;
+  --code-dim: #B79BAA;
+  --linux-fg: #5E2750;
+  --linux-bg: #F3E3EE;
+  --docker-fg: #0A559F;
+  --docker-bg: #DCEBFF;
+  --ok-fg: #14612F; --ok-bg: #DDF3E3;
+  --mid-fg: #7A4E00; --mid-bg: #FDEFD0;
+  --bad-fg: #8E1F1F; --bad-bg: #FBE1E1;
+  --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1E0016; --surface: #330224; --ink: #F5ECF0; --muted: #D2BFCB; --line: #5A2A4B; --accent: #FF8A5C; --accent-soft: #4A1A3A;
+    --code-bg: #17000F; --code-fg: #F5ECF0; --code-dim: #B79BAA;
+    --linux-fg: #F0B6DD; --linux-bg: #4A1A3A;
+    --docker-fg: #8CC3FF; --docker-bg: #112D4D;
+    --ok-fg: #8FDCA6; --ok-bg: #123322;
+    --mid-fg: #F5C46B; --mid-bg: #3A2C0E;
+    --bad-fg: #FF9E9E; --bad-bg: #3F1818;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1E0016; --surface: #330224; --ink: #F5ECF0; --muted: #D2BFCB;
+  --line: #5A2A4B; --accent: #FF8A5C; --accent-soft: #4A1A3A;
+  --code-bg: #17000F; --code-fg: #F5ECF0; --code-dim: #B79BAA;
+  --linux-fg: #F0B6DD; --linux-bg: #4A1A3A;
+  --docker-fg: #8CC3FF; --docker-bg: #112D4D;
+  --ok-fg: #8FDCA6; --ok-bg: #123322;
+  --mid-fg: #F5C46B; --mid-bg: #3A2C0E;
+  --bad-fg: #FF9E9E; --bad-bg: #3F1818;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  padding-inline: clamp(16px, 4vw, 32px);
+  padding-block: 28px 72px;
+}
+.wrap { max-width: 900px; margin-inline: auto; display: flex; flex-direction: column; gap: 56px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.15; }
+p { margin: 0; }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+.eyebrow {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--accent);
+}
+
+
+.term { display:flex; align-items:center; gap:8px; background:#2C001E; color:#F5ECF0; border-radius:10px 10px 0 0; padding:9px 14px; font-family:var(--font-mono); font-size:12.5px; }
+.term i { width:11px; height:11px; border-radius:50%; background:#D2491A; display:inline-block; }
+.term i:nth-child(2){ background:#AEA79F; } .term i:nth-child(3){ background:#77216F; }
+.term span { margin-left:8px; color:#D2BFCB; }
+.term b { color:#FF8A5C; font-weight:500; }
+/* En-tête */
+.top { display: flex; flex-direction: column; gap: 18px; }
+.top h1 { font-size: clamp(38px, 8vw, 64px); font-weight: 800; letter-spacing: -.02em; }
+.role { font-size: clamp(17px, 2.4vw, 20px); font-weight: 500; max-width: 60ch; }
+.lead { color: var(--muted); max-width: 62ch; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.facts li {
+  font-family: var(--font-mono); font-size: 12.5px; padding: 4px 10px;
+  border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--muted);
+}
+
+/* Fil rouge */
+.chain-wrap { display: flex; flex-direction: column; gap: 14px; }
+.chain-wrap h2 { font-size: 22px; }
+.chain { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; grid-template-columns: 1fr; }
+@media (min-width: 720px) { .chain { grid-template-columns: repeat(4, 1fr); gap: 16px; } }
+.chain a {
+  display: flex; flex-direction: column; gap: 6px; height: 100%;
+  padding: 12px 0 0; border-top: 3px solid var(--line); text-decoration: none; color: var(--ink);
+}
+.chain a:hover { border-top-color: var(--accent); }
+.chain .n { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.chain .t { font-family: var(--font-display); font-weight: 700; font-size: 16px; line-height: 1.25; }
+.chain .d { font-size: 14px; color: var(--muted); }
+
+/* Filtre */
+.bar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; justify-content: space-between; }
+.bar h2 { font-size: 22px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--surface); }
+.seg button {
+  font: inherit; font-size: 14px; font-weight: 500; padding: 8px 16px; border: 0; background: transparent;
+  color: var(--muted); cursor: pointer; min-height: 40px;
+}
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--bg); }
+
+/* Travaux */
+.works { display: flex; flex-direction: column; gap: 56px; }
+article { display: flex; flex-direction: column; gap: 22px; padding-top: 28px; border-top: 1px solid var(--line); scroll-margin-top: 16px; }
+.head { display: flex; flex-direction: column; gap: 10px; }
+.step { font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.pill { font-family: var(--font-mono); font-size: 12px; font-weight: 500; padding: 2px 9px; border-radius: 999px; }
+.pill.linux { background: var(--linux-bg); color: var(--linux-fg); }
+.pill.docker { background: var(--docker-bg); color: var(--docker-fg); }
+article h2 { font-size: clamp(24px, 4.4vw, 32px); font-weight: 700; letter-spacing: -.01em; }
+.grid { display: grid; gap: 28px; grid-template-columns: 1fr; }
+@media (min-width: 820px) { .grid { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 40px; } }
+.col { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+.blk { display: flex; flex-direction: column; gap: 8px; }
+.blk h3 { font-family: var(--font-mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.blk ul { margin: 0; padding-left: 1.15em; display: flex; flex-direction: column; gap: 6px; }
+.blk li::marker { color: var(--accent); }
+.max { max-width: 62ch; }
+
+pre {
+  margin: 0; background: var(--code-bg); color: var(--code-fg); border-radius: 8px; padding: 14px 16px;
+  font-family: var(--font-mono); font-size: 13.5px; line-height: 1.7; overflow-x: auto; max-width: 100%;
+}
+pre .c { color: var(--code-dim); }
+pre .p { color: var(--code-dim); user-select: none; }
+.spec { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; font-size: 14.5px; }
+.spec dt { font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); padding-top: 2px; }
+.spec dd { margin: 0; }
+.result {
+  background: var(--accent-soft); border-radius: 8px; padding: 12px 14px; font-size: 15px;
+}
+.result b { font-weight: 600; }
+
+figure.cap { margin: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); }
+figure.cap img { display: block; width: 100%; height: auto; }
+figure.cap figcaption { padding: 9px 14px; font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); }
+.lesson { font-size: 15px; color: var(--muted); }
+.lesson b { color: var(--ink); font-weight: 600; }
+
+/* Tableau */
+.tbl-wrap { overflow-x: auto; max-width: 100%; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 14px; font-variant-numeric: tabular-nums; }
+caption { text-align: left; padding: 12px 14px; font-size: 14px; color: var(--muted); }
+th, td { padding: 9px 14px; text-align: left; border-top: 1px solid var(--line); }
+thead th { font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--muted); }
+th[scope="row"] { font-weight: 500; }
+td.hl { font-weight: 600; }
+.s { display: inline-block; padding: 1px 8px; border-radius: 6px; font-size: 13px; }
+.s.ok { background: var(--ok-bg); color: var(--ok-fg); }
+.s.mid { background: var(--mid-bg); color: var(--mid-fg); }
+.s.bad { background: var(--bad-bg); color: var(--bad-fg); }
+.w { font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); }
+
+/* Compétences et contact */
+.skills { display: grid; gap: 28px; grid-template-columns: 1fr; }
+@media (min-width: 720px) { .skills { grid-template-columns: 1fr 1fr 1fr; } }
+.skills h2 { font-size: 22px; }
+.chips { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.chips li { font-size: 13.5px; padding: 4px 11px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); }
+.contact { display: flex; flex-direction: column; gap: 10px; padding-top: 28px; border-top: 1px solid var(--line); }
+.contact h2 { font-size: 22px; }
+.mail { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.mail code { font-family: var(--font-mono); font-size: 15px; overflow-wrap: anywhere; user-select: all; }
+.mail button {
+  font: inherit; font-size: 14px; padding: 6px 14px; border-radius: 8px; border: 1px solid var(--accent);
+  background: transparent; color: var(--accent); cursor: pointer; min-height: 38px;
+}
+.mail button:hover { background: var(--accent-soft); }
+.note { font-size: 13.5px; color: var(--muted); max-width: 70ch; }
+@media (prefers-reduced-motion: no-preference) {
+  .chain a { transition: border-color .15s; }
+  .mail button { transition: background .15s; }
+}

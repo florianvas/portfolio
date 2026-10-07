@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio Florian Vasseur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="term" aria-hidden="true"><i></i><i></i><i></i><span><b>florian@ubuntu</b>:~$ cat portfolio.md</span></div>
+    <p class="eyebrow">Portfolio · Linux et Docker</p>
+    <h1>Florian Vasseur</h1>
+    <p class="role">Technicien Systèmes, Réseaux et Sécurité, en route vers l'administration systèmes, réseaux et bases de données.</p>
+    <ul class="facts">
+      <li>Hyper-V</li>
+      <li>Ubuntu Server</li>
+      <li>Docker</li>
+      <li>Bash</li>
+      <li>Zabbix · Graylog</li>
+    </ul>
+  </header>
+
+  <section class="chain-wrap" aria-labelledby="fil">
+    <h2 id="fil">Le fil rouge</h2>
+    <ol class="chain">
+      <li><a href="#etape-1"><span class="n">Étape 1</span><span class="t">Un serveur Linux de test, isolé</span><span class="d">Hyper-V, Ubuntu Server</span></a></li>
+      <li><a href="#etape-2"><span class="n">Étape 2</span><span class="t">Docker installé et sécurisé</span><span class="d">Dépôts officiels, droits utilisateur</span></a></li>
+      <li><a href="#etape-3"><span class="n">Étape 3</span><span class="t">Un tableau de bord unique, en conteneur</span><span class="d">Homarr, rôles et accès</span></a></li>
+      <li><a href="#etape-4"><span class="n">Étape 4</span><span class="t">Une supervision maison en Bash</span><span class="d">CPU, RAM, disque</span></a></li>
+    </ol>
+  </section>
+
+  <section class="works" aria-labelledby="travaux">
+    <div class="bar">
+      <h2 id="travaux">Les travaux</h2>
+      <div class="seg" role="group" aria-label="Filtrer par sujet">
+        <button type="button" id="f-all" aria-pressed="true" data-filter="all">Tous</button>
+        <button type="button" id="f-linux" aria-pressed="false" data-filter="linux">Linux</button>
+        <button type="button" id="f-docker" aria-pressed="false" data-filter="docker">Docker</button>
+      </div>
+    </div>
+
+    <article id="etape-1" data-tags="linux">
+      <div class="head">
+        <p class="step"><span>Étape 1</span><span class="pill linux">Linux</span></p>
+        <h2>Un environnement de test Linux, isolé de la production</h2>
+      </div>
+      <div class="grid">
+        <div class="col">
+          <div class="blk max"><h3>Contexte</h3>
+            <p>Je devais comparer plusieurs solutions de tableaux de bord. Installer des logiciels à l'essai sur la production expose à des conflits, à des failles et à une baisse de performance. Il fallait un espace dédié, stable et facile à refaire.</p>
+          </div>
+          <div class="blk"><h3>Pourquoi un environnement isolé, et pas les serveurs de production ?</h3>
+            <ul>
+              <li><b>Protéger la production.</b> Installer des logiciels à l'essai peut provoquer des conflits, ouvrir des failles de sécurité ou ralentir les serveurs que les équipes utilisent tous les jours.</li>
+              <li><b>Valider avant de déployer.</b> En entreprise, une solution se teste d'abord dans un espace séparé. On ne la met en production qu'une fois qu'elle a fait ses preuves.</li>
+              <li><b>Pouvoir se tromper sans conséquence.</b> Sur une VM, un snapshot permet de revenir en arrière en quelques minutes. Sur un serveur de production, une erreur touche directement les utilisateurs.</li>
+              <li><b>Un environnement reproductible.</b> La même VM peut être recréée pour tester plusieurs solutions dans les mêmes conditions.</li>
+            </ul>
+          </div>
+          <div class="blk"><h3>Ce que j'ai fait</h3>
+            <ul>
+              <li>Création d'une machine virtuelle sous Hyper-V, déjà utilisé dans l'entreprise, donc sans nouvel outil à intégrer.</li>
+              <li>Ressources volontairement modestes pour pouvoir reproduire la VM sur n'importe quel poste.</li>
+              <li>Installation d'Ubuntu Server sur la VM.</li>
+              <li>Réseau en Default Switch d'Hyper-V : l'accès à Internet suffit aux installations, et la VM reste coupée du réseau interne.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col">
+          <div class="blk"><h3>La machine</h3>
+            <dl class="spec">
+              <dt>Hyperviseur</dt><dd>Hyper-V</dd>
+              <dt>Mémoire</dt><dd>4 Go de RAM</dd>
+              <dt>Stockage</dt><dd>20 Go</dd>
+              <dt>Système</dt><dd>Ubuntu Server</dd>
+              <dt>Réseau</dt><dd>Default Switch</dd>
+              <dt>Contrôle</dt><dd>ping vers le réseau interne : aucune réponse</dd>
+            </dl>
+          </div>
+          <p class="result"><b>Résultat.</b> Une base saine pour installer Docker et tester les tableaux de bord, avec moins de risques pendant les essais.</p>
+        </div>
+      </div>
+    </article>
+
+    <article id="etape-2" data-tags="docker">
+      <div class="head">
+        <p class="step"><span>Étape 2</span><span class="pill docker">Docker</span></p>
+        <h2>Installer Docker proprement sur la machine Linux</h2>
+      </div>
+      <div class="grid">
+        <div class="col">
+          <div class="blk max"><h3>Contexte</h3>
+            <p>Installer chaque application directement sur le système crée des conflits de dépendances et complique la maintenance. La DSI a retenu Docker pour isoler chaque application dans un environnement dédié et reproductible.</p>
+          </div>
+          <div class="blk"><h3>Ce que j'ai fait</h3>
+            <ul>
+              <li>Mise à jour des paquets, puis installation de Docker depuis les dépôts officiels de Docker Inc. pour avoir une version stable et suivie.</li>
+              <li>Vérification du service, puis d'un conteneur de test. Cela valide le moteur, le téléchargement depuis Docker Hub et l'exécution.</li>
+              <li>Ajout de l'utilisateur courant au groupe docker, pour travailler sans compte administrateur.</li>
+              <li>Snapshot de la VM avant toute modification importante, pour revenir en arrière rapidement.</li>
+            </ul>
+          </div>
+          <figure class="cap"><img src="images/capture-hello-world.png" alt="Capture du terminal : sortie de la commande docker run hello-world, message « Hello from Docker! », puis docker images hello-world" loading="lazy"><figcaption>Capture du mémoire : test <code>docker run hello-world</code> réussi, l'image est bien téléchargée depuis Docker Hub.</figcaption></figure>
+        </div>
+        <div class="col">
+          <div class="blk"><h3>Installer Docker (Ubuntu Server)</h3>
+<pre><span class="c"># 1. mettre à jour le système : évite les conflits de versions</span>
+<span class="p">$ </span>sudo apt update &amp;&amp; sudo apt upgrade -y
+
+<span class="c"># 2. ajouter la clé et le dépôt officiels de Docker :</span>
+<span class="c">#    version stable, mises à jour de sécurité suivies</span>
+<span class="p">$ </span>sudo apt install -y ca-certificates curl
+<span class="p">$ </span>sudo install -m 0755 -d /etc/apt/keyrings
+<span class="p">$ </span>sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
+    -o /etc/apt/keyrings/docker.asc
+<span class="p">$ </span>echo "deb [signed-by=/etc/apt/keyrings/docker.asc] \
+    https://download.docker.com/linux/ubuntu $(. /etc/os-release &amp;&amp; echo $VERSION_CODENAME) stable" \
+    | sudo tee /etc/apt/sources.list.d/docker.list
+<span class="p">$ </span>sudo apt update
+
+<span class="c"># 3. installer le moteur Docker et ses outils (dont Compose)</span>
+<span class="p">$ </span>sudo apt install -y docker-ce docker-ce-cli containerd.io \
+    docker-buildx-plugin docker-compose-plugin
+
+<span class="c"># 4. vérifier que le service tourne</span>
+<span class="p">$ </span>systemctl status docker
+
+<span class="c"># 5. tester : télécharge une image et lance un conteneur</span>
+<span class="p">$ </span>sudo docker run hello-world
+
+<span class="c"># 6. travailler sans root (se reconnecter ensuite)</span>
+<span class="p">$ </span>sudo usermod -aG docker $USER</pre>
+          </div>
+          <div class="blk"><h3>À quoi ça sert</h3>
+            <ul>
+              <li><b>Mise à jour + dépôt officiel</b> : on installe une version récente, signée et maintenue, plutôt qu'un paquet ancien de la distribution.</li>
+              <li><b>docker-ce</b> : le moteur qui crée et exécute les conteneurs. <b>docker-compose-plugin</b> : décrit une application dans un fichier YAML (utilisé pour Homarr).</li>
+              <li><b>hello-world</b> : valide d'un coup le moteur, le téléchargement depuis Docker Hub et l'exécution.</li>
+              <li><b>Groupe docker</b> : évite d'utiliser root à chaque commande, ce qui limite les risques.</li>
+            </ul>
+          </div>
+          <p class="result"><b>Résultat.</b> Des déploiements plus souples et moins de conflits logiciels. Par rapport à une VM complète, un conteneur consomme moins de ressources, se lance plus vite et se déplace plus facilement.</p>
+        </div>
+      </div>
+    </article>
+
+    <article id="etape-3" data-tags="docker">
+      <div class="head">
+        <p class="step"><span>Étape 3</span><span class="pill docker">Docker</span></p>
+        <h2>Un tableau de bord unique pour les outils de l'équipe, déployé avec Docker</h2>
+      </div>
+      <div class="grid">
+        <div class="col">
+          <div class="blk max"><h3>Contexte</h3>
+            <p>Les outils de supervision, de logs et les applications internes s'ouvraient par des adresses ou des favoris propres à chacun. Résultat : du temps perdu, aucune centralisation, des nouveaux arrivants perdus et aucune gestion commune des droits.</p>
+          </div>
+          <div class="blk"><h3>Ce que j'ai fait</h3>
+            <ul>
+              <li>Tableau comparatif de quatre solutions, avec des critères pondérés définis avec la DSI.</li>
+              <li>Choix de Homarr, déployé dans un conteneur sur la VM Linux.</li>
+              <li>Compte administrateur, trois rôles (technicien support, développeur, administrateur) et un tableau de bord par service.</li>
+              <li>Intégration de Zabbix, de Graylog et des applications métier.</li>
+              <li>Droits au plus juste : un technicien accède à la supervision et aux logs, un développeur n'accède pas aux outils internes du support. Tests de validation sur les accès.</li>
+            </ul>
+          </div>
+          <figure class="cap"><img src="images/capture-homarr-docker-compose.png" alt="Documentation Homarr : fichier docker-compose.yml avec le service homarr, l'image, les volumes et le port 7575" loading="lazy"><figcaption>Capture du mémoire : fichier <code>docker-compose.yml</code> de Homarr (clé de chiffrement masquée).</figcaption></figure>
+        </div>
+        <div class="col">
+          <div class="blk"><h3>Rôles et accès</h3>
+            <dl class="spec">
+              <dt>Technicien support</dt><dd>supervision, logs</dd>
+              <dt>Développeur</dt><dd>sans accès aux outils internes du support</dd>
+              <dt>Administrateur</dt><dd>gestion des comptes et des rôles</dd>
+            </dl>
+          </div>
+          <p class="result"><b>Résultat.</b> Un gain de temps estimé à environ 20 % pour accéder aux différentes plateformes.</p>
+          <p class="lesson"><b>Ce que j'en retiens.</b> Le tableau comparatif rend le choix objectif et facile à justifier. Docker isole l'application du système hôte, ce qui simplifie la maintenance.</p>
+        </div>
+      </div>
+
+      <div class="tbl-wrap" tabindex="0" role="region" aria-label="Comparatif des tableaux de bord, défiler pour voir la suite">
+        <table>
+          <caption>Comparatif des solutions étudiées. Le poids indique l'importance du critère.</caption>
+          <thead>
+            <tr><th scope="col">Critère</th><th scope="col">Homarr</th><th scope="col">Organizr</th><th scope="col">Homer</th><th scope="col">Heimdall</th><th scope="col">Poids</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Gestion des utilisateurs</th><td class="hl"><span class="s ok">Oui</span></td><td><span class="s ok">Oui</span></td><td><span class="s bad">Non</span></td><td><span class="s bad">Non</span></td><td class="w">Élevé</td></tr>
+            <tr><th scope="row">Rôles et droits</th><td class="hl"><span class="s ok">Oui</span></td><td><span class="s mid">Partiel</span></td><td><span class="s bad">Non</span></td><td><span class="s bad">Non</span></td><td class="w">Élevé</td></tr>
+            <tr><th scope="row">Intégration par adresse</th><td class="hl"><span class="s ok">Oui</span></td><td><span class="s ok">Oui</span></td><td><span class="s ok">Oui</span></td><td><span class="s ok">Oui</span></td><td class="w">Moyen</td></tr>
+            <tr><th scope="row">Compatibilité Docker</th><td class="hl"><span class="s ok">Oui</span></td><td><span class="s ok">Oui</span></td><td><span class="s ok">Oui</span></td><td><span class="s ok">Oui</span></td><td class="w">Élevé</td></tr>
+            <tr><th scope="row">Facilité d'installation</th><td class="hl"><span class="s ok">Bonne</span></td><td><span class="s mid">Moyenne</span></td><td><span class="s ok">Bonne</span></td><td><span class="s ok">Bonne</span></td><td class="w">Moyen</td></tr>
+            <tr><th scope="row">Ergonomie</th><td class="hl"><span class="s ok">Très bonne</span></td><td><span class="s ok">Bonne</span></td><td><span class="s mid">Basique</span></td><td><span class="s ok">Bonne</span></td><td class="w">Moyen</td></tr>
+            <tr><th scope="row">Documentation officielle</th><td class="hl"><span class="s ok">Complète</span></td><td><span class="s mid">Limitée</span></td><td><span class="s ok">Bonne</span></td><td><span class="s mid">Moyenne</span></td><td class="w">Faible</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article id="etape-4" data-tags="linux">
+      <div class="head">
+        <p class="step"><span>Étape 4</span><span class="pill linux">Linux</span></p>
+        <h2>Superviser le serveur avec un script Bash</h2>
+      </div>
+      <div class="grid">
+        <div class="col">
+          <div class="blk max"><h3>Contexte</h3>
+            <p>Le serveur Linux hébergeait des conteneurs et des outils de test, sans aucune supervision. Une surcharge du processeur ou de la mémoire serait passée inaperçue, sans historique pour comprendre après coup. Personne ne me l'avait demandé : j'ai proposé et mis en place la solution moi-même.</p>
+          </div>
+          <div class="blk"><h3>Ce que j'ai fait</h3>
+            <ul>
+              <li>Choix d'un script Bash plutôt que de Zabbix ou de Prometheus avec Grafana, trop lourds pour un simple environnement de test.</li>
+              <li>Mesure du processeur à partir du noyau, de la mémoire vive avec free, du disque avec df.</li>
+              <li>Exécution en boucle toutes les 5 secondes, sortie écrite dans un fichier de logs horodaté pour garder l'historique.</li>
+              <li>Test avec une charge processeur simulée et des applications gourmandes en mémoire : les variations ont bien été enregistrées.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col">
+          <div class="blk"><h3>Ce que le script lit</h3>
+<pre><span class="c"># processeur</span>
+/proc/stat
+
+<span class="c"># mémoire vive</span>
+<span class="p">$ </span>free
+
+<span class="c"># espace disque</span>
+<span class="p">$ </span>df
+
+<span class="c"># test de charge</span>
+<span class="p">$ </span>stress</pre>
+          </div>
+          <p class="result"><b>Résultat.</b> Un suivi simple du CPU, de la RAM et du disque, avec un historique exploitable, sans rien installer de plus.</p>
+          <p class="lesson"><b>Ce que j'en retiens.</b> Le script n'a ni interface graphique ni alertes, et il se lit à la main. En production, Zabbix ou Prometheus avec Grafana seraient plus adaptés. Prendre l'initiative a renforcé la fiabilité du serveur.</p>
+        </div>
+      </div>
+    </article>
+
+    <article id="bonus" data-tags="docker">
+      <div class="head">
+        <p class="step"><span>Réutilisation</span><span class="pill docker">Docker</span></p>
+        <h2>Docker au service d'un autre projet : l'accueil des stagiaires</h2>
+      </div>
+      <div class="col max">
+        <p>Pour le programme d'accueil et de formation des stagiaires, j'ai mis l'environnement d'exercices de supervision dans un conteneur. Chaque promotion démarre dans des conditions identiques, et l'environnement se supprime puis se reconstruit en quelques minutes à la fin.</p>
+        <div class="blk"><ul>
+          <li>Aucune exécution en root.</li>
+          <li>Volumes montés limités au strict nécessaire pour les exercices.</li>
+          <li>Procédure de déploiement standardisée, avec les mêmes paramètres de sécurité et les mêmes jeux de données à chaque fois.</li>
+        </ul></div>
+      </div>
+    </article>
+  </section>
+
+  <section class="skills" aria-label="Compétences démontrées">
+    <div>
+      <h2>Côté Linux</h2>
+      <ul class="chips">
+        <li>Hyper-V</li><li>Ubuntu Server</li><li>apt</li><li>systemctl</li><li>Scripting Bash</li><li>/proc, free, df</li><li>Snapshots</li><li>Isolation réseau</li>
+      </ul>
+    </div>
+    <div>
+      <h2>Côté Docker</h2>
+      <ul class="chips">
+        <li>Installation depuis les dépôts officiels</li><li>Docker Hub</li><li>Déploiement d'application (Homarr)</li><li>Gestion des droits</li><li>Rôles et accès</li><li>Environnement reproductible</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="contact" aria-labelledby="contact">
+    <h2 id="contact">Me contacter</h2>
+    <div class="mail">
+      <code id="mail">florian.vasseur1@laposte.net</code>
+      <button type="button" id="copy">Copier l'adresse</button>
+      <span id="copied" class="note" role="status" aria-live="polite"></span>
+    </div>
+    <p class="note">Les noms de machines, adresses et clients ont été retirés de ce portfolio.</p>
+  </section>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
